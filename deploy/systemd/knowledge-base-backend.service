@@ -1,0 +1,22 @@
+[Unit]
+Description=Knowledge Base Backend (FastAPI)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/knowledge-base/backend
+Environment="HOST=127.0.0.1"
+Environment="PORT=8001"
+Environment="ALLOWED_ORIGINS=https://kb.example.com"
+Environment="LOG_DIR=/var/log/knowledge-base"
+EnvironmentFile=-/opt/knowledge-base/backend/.env
+ExecStart=/opt/knowledge-base/backend/.venv/bin/python start_server.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/knowledge-base/backend.out.log
+StandardError=append:/var/log/knowledge-base/backend.err.log
+
+[Install]
+WantedBy=multi-user.target

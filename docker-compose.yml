@@ -1,0 +1,55 @@
+# ============================================================
+# 知识库生产部署 - Docker Compose
+# ============================================================
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: kb-backend:latest
+    container_name: kb-backend
+    restart: unless-stopped
+    ports:
+      # 只绑定到本机（防止直接暴露公网）
+      - "127.0.0.1:8000:8000"
+    volumes:
+      # 持久化数据
+      - kb_data:/app/data
+    environment:
+      - TZ=Asia/Shanghai
+      - ENV=production
+      - LOG_LEVEL=info
+      - ALLOWED_ORIGINS=https://your-domain.com
+      # Embedding 配置
+      - EMBEDDING_MODE=api
+      - EMBEDDING_PROVIDER=siliconflow
+      - SILICONFLOW_API_KEY=${SILICONFLOW_API_KEY}
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  kb_data:
+    driver: local

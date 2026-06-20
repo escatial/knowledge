@@ -1,0 +1,237 @@
+# ============================================================
+# 知识库 (Knowledge OS) - .gitignore
+# 上传 GitHub 前请仔细检查，避免泄露密钥
+# ============================================================
+
+# ── 关键：API Key / 凭据 ──────────────────────────────────────
+# 警告：apikey.txt 包含 minimax 真实 API key，绝对不能上传
+apikey.txt
+*apikey*
+*api_key*
+*api-key*
+
+# .env 文件（环境变量，包含密钥）
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+!.env.example   # 保留 .env.example 作为模板
+
+# 私钥 / 证书
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+secrets/
+credentials/
+config/credentials.json
+
+# ── 数据库 / 向量索引（运行时生成，绝对不能入库） ──────────────
+# 任务 P3-11 紧急修复：之前 .gitignore 通配符逐个匹配，导致数据库/密码哈希泄露
+# 教训：data/ 目录必须**整个**排除
+
+# 整个 backend/data/ 目录及其所有子文件（最保险）
+backend/data/
+backend/data/**
+
+# Chroma 向量库、SQLite 特殊文件等独立规则（冗余保护）
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+
+# Neo4j / 图数据库（已含在 backend/data/ 中，但保留作为冗余）
+backend/data/graph/
+backend/data/neo4j/
+
+# 上传的原始文档 / 索引产物（已含在 backend/data/ 中，但保留作为冗余）
+backend/data/uploads/
+backend/data/documents/
+backend/data/parsed/
+backend/data/cache/
+
+# ── 日志文件（运行产生，不应入库） ──────────────────────────
+*.log
+logs/
+backend/logs/
+backend/data/logs/
+backend/data/*.log
+backend/data/*/*.log
+backend/app.log
+backend/json_*.log
+backend/json_*.txt
+
+# ── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 虚拟环境
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+.python-venv
+
+# mypy / ruff / black
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter
+.ipynb_checkpoints/
+profile_default/
+
+# ── Node / Frontend ────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# 构建产物
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/.nuxt/
+frontend/.vuepress/dist/
+frontend/.cache/
+backend/dist/
+
+# 覆盖率 / 测试
+coverage/
+.nyc_output/
+frontend/tests/coverage/
+frontend/tests/.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+
+# npm/yarn/pnpm 锁文件（保留 package-lock.json）
+yarn.lock
+pnpm-lock.yaml
+.npm/
+.yarn/
+.eslintcache
+.stylelintcache
+
+# Vite 缓存
+.vite/
+frontend/.vite/
+
+# ── IDE / 编辑器 ──────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+*.iml
+*.ipr
+*.iws
+.fleet/
+.cursor/
+*.swp
+*.swo
+*~
+
+# Trae IDE 临时文件
+.out-of-code-insights/
+.trae/
+.trae-aicc/
+
+# ── 操作系统 ──────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ── 临时文件 ──────────────────────────────────────────────
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.orig
+*.rej
+*.sav
+*~
+
+# ── 备份 / 归档 ───────────────────────────────────────────
+*.tar.gz
+*.zip
+*.7z
+*.rar
+backups/
+*.sql
+*.dump
+
+# ── Docker / 部署产物 ─────────────────────────────────────
+# 注意：Dockerfile / docker-compose.yml / .dockerignore 应该入库
+# 这里只忽略构建产物
+docker-compose.override.yml
+.docker/
+*.pid
+
+# ── 模型权重 / 大文件 ─────────────────────────────────────
+*.bin
+*.pt
+*.onnx
+*.h5
+*.pkl
+*.pickle
+*.safetensors
+models/
+checkpoints/
+weights/
+
+# ── 用户数据 / 缓存 ──────────────────────────────────────
+frontend/.cache/
+frontend/.parcel-cache/
+.eslintcache
+.cache/
+
+# ── 测试报告 / 截图（可选保留为文档） ─────────────────────
+# docs/screenshots/ 通常是 README 引用的图，建议保留
+# 如果不想上传，取消下一行注释：
+# docs/screenshots/
+
+# ── 项目专属（额外防护） ─────────────────────────────────
+# PITFALLS.md 是开发复盘总结（技术分享），可上传
+# 如果包含敏感信息，请移到 docs/internal/ 并在 .gitignore 中排除
+
+# 测试运行时生成的临时文件
+backend/tests/.pytest_cache/
+backend/tests/__pycache__/
+backend/tests/htmlcov/
+backend/tests/.coverage
